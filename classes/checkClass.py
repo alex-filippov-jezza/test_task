@@ -7,6 +7,7 @@ class Check:
         self.file_path = file_path
         self.df = None
 
+    @property
     def get_data(self):
         data = []
         with open(self.file_path, 'r', encoding='utf-8-sig') as file:
@@ -39,8 +40,19 @@ class Check:
         return self.df
 
     def sorted_checks_to_file(self):
-        with open('new.txt', 'w', encoding='utf-8') as file:
-            for index, row in self.get_data().iterrows():
+        with open('чеки_по_папкам.txt', 'w', encoding='utf-8') as file:
+            for index, row in self.get_data.iterrows():
                 month = row['Месяц']
                 service = row['Услуга']
                 file.write(f"{month}/{service}_{month}.pdf\n")
+
+    def add_unpaid_services(self):
+        services = set(self.get_data['Услуга'].unique())
+
+        with open('чеки_по_папкам.txt', 'a', encoding='utf-8') as file:
+            file.write("не оплачены:\n")
+            for month in self.get_data['Месяц'].unique():
+                services_in_month = set(self.get_data[self.get_data['Месяц'] == month]['Услуга'])
+                missing = services - services_in_month
+                if missing:
+                    file.write(f"\n{month}:\n{'\n'.join(missing)}\n")
