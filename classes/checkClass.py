@@ -9,7 +9,7 @@ class Check:
 
     def get_data(self):
         data = []
-        with open(self.file_path, 'r') as file:
+        with open(self.file_path, 'r', encoding='utf-8') as file:
 
             for line in file:
                 parts = line.strip().split('_')
